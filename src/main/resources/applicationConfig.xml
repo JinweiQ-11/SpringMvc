@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      ">
+    <!--加载外部文件 -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <bean id = "userDao" class="com.example.dao.imp.UserDaoImpl" scope="prototype" init-method="init" destroy-method="destory">
+        <property name="username" value="1212"> </property>
+        <property name="stringList">
+            <list>
+                <value>aaa</value>
+                <value>bbb</value>
+            </list>
+        </property>
+        <property name="userMap">
+            <map>
+                <entry key="u1" value-ref="user1"></entry>
+            </map>
+        </property>
+        <property name="properties">
+        <props>
+            <prop key="p1"> </prop>
+            <prop key="p2"> </prop>
+        </props>
+        </property>
+    </bean>
+
+    <bean id = "user1" class="com.example.User">
+        <property name="name" value="lucy"> </property>
+        <property name="addr" value="121212"> </property>
+    </bean>
+<!--    <bean id = "userDao" class="com.example.dao.factory.staticFactory" factory-method="getUserDao"></bean>-->
+
+<!--    <bean id = "userDao" class="com.example.dao.factory.staticFactory" factory-method="getUserDao"></bean>-->
+
+<!--    <bean id = "factory" class = "com.example.dao.factory.DynamicFactory"> </bean>-->
+<!--    <bean id="userDao" factory-bean="factory" factory-method="getUserDao"> </bean>-->
+<!--    <bean id = "userService" class="com.example.service.imp.UserServiceImp">-->
+<!--        <property name="userDao" ref="userDao"> </property>-->
+<!--    </bean>-->
+<!--    <bean id = "userService" class="com.example.service.imp.UserServiceImp" p:userDao-ref="userDao">-->
+
+<!--    </bean>-->
+    <bean id = "userService" class="com.example.service.imp.UserServiceImp">
+        <constructor-arg name = "userDao" ref="userDao"> </constructor-arg>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"> </property>
+        <property name="jdbcUrl" value="${jdbc.url}"> </property>
+        <property name="user" value="${jdbc.username}"> </property>
+        <property name="password" value="${jdbc.password}"> </property>
+    </bean>
+    <!-- 配置JdbcTemplate -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"> </property>
+    </bean>
+
+    <!-- 组件扫描-->
+<!--    <context:component-scan base-package="org.springframework.jdbc.core.JdbcTemplate.example"/>-->
+<!--    <context:component-scan base-package="com.example">-->
+<!--        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller">-->
+<!--    </context:component-scan>-->
+
+</beans>
